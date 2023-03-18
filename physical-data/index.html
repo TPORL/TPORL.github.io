@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>身体数据</title>
+  </head>
+  <body>
+    <form id="physical-form">
+      <div>
+        <label for="sex">性别：</label>
+        <select name="sex" id="sex">
+          <option value="male">男</option>
+          <option value="female">女</option>
+        </select>
+      </div>
+      <div>
+        <label for="stature">身高：</label>
+        <input type="number" name="stature" id="stature" /> 厘米
+      </div>
+      <div>
+        <label for="weight">体重：</label>
+        <input type="number" name="weight" id="weight" /> 公斤
+      </div>
+      <div>
+        <label for="waistline">腰围：</label>
+        <input type="number" name="waistline" id="waistline" /> 厘米
+      </div>
+      <div>
+        <label for="bmi">BMI：</label>
+        <output name="bmi" id="bmi" for="stature weight"></output>
+      </div>
+      <div>
+        <label for="body-fat-ratio">体脂率：</label>
+        <output name="body-fat-ratio" id="body-fat-ratio" for="sex waistline weight"></output>
+      </div>
+    </form>
+    <br />
+    <table border="1">
+      <thead>
+        <tr>
+          <th colspan="2">BMI 标准</th>
+        </tr>
+        <tr>
+          <th>分类</th>
+          <th>范围</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>偏瘦</td>
+          <td align="center">BMI ≤ 18.4</td>
+        </tr>
+        <tr>
+          <td>标准</td>
+          <td align="center">18.5 ≤ BMI ≤ 23.9</td>
+        </tr>
+        <tr>
+          <td>偏胖</td>
+          <td align="center">24.0 ≤ BMI ≤ 27.9</td>
+        </tr>
+        <tr>
+          <td>肥胖</td>
+          <td align="center">BMI ≥ 28.0</td>
+        </tr>
+      </tbody>
+    </table>
+    <script type="module">
+      const form = document.querySelector('#physical-form')
+      const sex = document.querySelector('#sex')
+      const stature = document.querySelector('#stature')
+      const weight = document.querySelector('#weight')
+      const waistline = document.querySelector('#waistline')
+      const bmi = document.querySelector('#bmi')
+      const bodyFatRatio = document.querySelector('#body-fat-ratio')
+
+      function calcBMI(weight, stature) {
+        return weight / Math.pow(stature / 100, 2)
+      }
+
+      function calcBodyFatRatio(sex, waistline, weight) {
+        const a = waistline * 0.74
+        const b = weight * 0.082 + (sex === 'male' ? 44.74 : 34.89)
+        const c = a - b
+        return (c / weight) * 100
+      }
+
+      form.addEventListener('input', () => {
+        bmi.value = calcBMI(Number(weight.value), Number(stature.value))
+        bodyFatRatio.value = calcBodyFatRatio(sex.value, Number(waistline.value), Number(weight.value)) + '%'
+      })
+    </script>
+  </body>
+</html>
